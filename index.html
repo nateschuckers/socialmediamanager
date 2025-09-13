@@ -325,7 +325,6 @@
         const backToSelectionBtn = document.getElementById('back-to-selection-btn');
         const appTitle = document.getElementById('app-title');
         const userInfo = document.getElementById('user-info');
-        // ... (rest of the existing DOM references) ...
         const uploadInput = document.getElementById('photo-upload-input');
         const imagePreview = document.getElementById('image-preview');
         const uploadPrompt = document.getElementById('upload-prompt');
@@ -391,20 +390,15 @@
         }
 
         async function initFirebase() {
-             // --- START DEBUGGING CODE ---
-            console.log("Attempting to initialize Firebase...");
-            console.log("Type of FIREBASE_CONFIG variable:", typeof FIREBASE_CONFIG);
-            if (typeof FIREBASE_CONFIG !== 'undefined') {
-                 console.log("Raw FIREBASE_CONFIG value:", FIREBASE_CONFIG);
-            } else {
-                console.error("CRITICAL: FIREBASE_CONFIG variable is undefined!");
-            }
-            // --- END DEBUGGING CODE ---
-            
-            appId = typeof APP_ID !== 'undefined' ? APP_ID : 'social-sync-ai-app';
-            const firebaseConfig = typeof FIREBASE_CONFIG !== 'undefined' ? JSON.parse(FIREBASE_CONFIG) : {};
-            
             try {
+                // Ensure the variables are defined before trying to use them.
+                if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG === 'undefined') {
+                    throw new Error("Firebase configuration variables are not defined.");
+                }
+
+                appId = APP_ID;
+                const firebaseConfig = FIREBASE_CONFIG; // No JSON.parse needed
+                
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
@@ -425,7 +419,7 @@
                 });
             } catch (error) {
                 console.error("Firebase initialization error:", error);
-                loginScreen.innerHTML = `<p class="text-red-400">Could not connect to services. Please try again later.</p>`;
+                loginScreen.innerHTML = `<p class="text-red-400">Could not connect to services. Please ensure configuration is correct.</p>`;
             }
         }
         
@@ -434,7 +428,6 @@
         googleSignInBtn.addEventListener('click', handleGoogleSignIn);
         signOutBtn.addEventListener('click', handleSignOut);
         
-        // ... (rest of the event listeners) ...
         longitudeCard.addEventListener('click', () => selectBusiness('longitude'));
         figureformCard.addEventListener('click', () => selectBusiness('figureform'));
         backToSelectionBtn.addEventListener('click', () => {
@@ -495,8 +488,6 @@
         closeResultsModalBtn.addEventListener('click', () => resultsModal.classList.add('hidden'));
         resultsModal.addEventListener('click', (e) => { if (e.target === resultsModal) resultsModal.classList.add('hidden'); });
 
-        // --- Core Functions ---
-        
         async function selectBusiness(business) {
             currentBusiness = business;
             const config = businessConfigs[business];
