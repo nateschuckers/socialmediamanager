@@ -391,7 +391,9 @@
 
         async function initFirebase() {
             try {
+                // Diagnostic log
                 console.log("Attempting to initialize Firebase...");
+                
                 if (typeof FIREBASE_CONFIG === 'undefined' || !FIREBASE_CONFIG.apiKey) {
                     throw new Error("Firebase configuration variables were not injected by Netlify or are incomplete.");
                 }
@@ -418,7 +420,7 @@
                 });
             } catch (error) {
                 console.error("Firebase initialization error:", error);
-                loginScreen.innerHTML = `<div class="p-4 bg-red-900/50 border border-red-500 rounded-lg text-red-300">
+                loginScreen.innerHTML = `<div class="p-4 bg-red-900/50 border border-red-500 rounded-lg text-red-300 max-w-lg mx-auto mt-24">
                     <p class="font-bold">Could not connect to services.</p>
                     <p class="text-sm mt-1">Please ensure your Netlify environment variables and Snippet Injection are set up correctly. Error: ${error.message}</p>
                 </div>`;
