@@ -391,13 +391,12 @@
 
         async function initFirebase() {
             try {
-                // Ensure the variables are defined before trying to use them.
-                if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG === 'undefined') {
-                    throw new Error("Firebase configuration variables are not defined.");
+                if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG === 'undefined' || !FIREBASE_CONFIG.apiKey) {
+                    throw new Error("Firebase configuration variables are not defined or are incomplete.");
                 }
 
                 appId = APP_ID;
-                const firebaseConfig = FIREBASE_CONFIG; // No JSON.parse needed
+                const firebaseConfig = FIREBASE_CONFIG;
                 
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
@@ -423,7 +422,7 @@
             }
         }
         
-        initFirebase();
+        window.addEventListener('load', initFirebase);
         
         googleSignInBtn.addEventListener('click', handleGoogleSignIn);
         signOutBtn.addEventListener('click', handleSignOut);
