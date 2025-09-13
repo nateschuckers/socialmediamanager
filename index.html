@@ -391,23 +391,15 @@
 
         async function initFirebase() {
             try {
-                // Debugging logs
                 console.log("Attempting to initialize Firebase...");
-                console.log("Type of FIREBASE_CONFIG_STRING:", typeof FIREBASE_CONFIG_STRING);
-                console.log("Raw FIREBASE_CONFIG_STRING value:", FIREBASE_CONFIG_STRING);
 
-
-                if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG_STRING === 'undefined' || FIREBASE_CONFIG_STRING.trim() === '') {
-                    throw new Error("Firebase configuration variables were not injected by Netlify or are empty.");
+                if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG === 'undefined' || !FIREBASE_CONFIG.apiKey) {
+                    throw new Error("Firebase configuration variables were not injected by Netlify or are incomplete.");
                 }
 
                 appId = APP_ID;
-                const firebaseConfig = JSON.parse(FIREBASE_CONFIG_STRING);
+                const firebaseConfig = FIREBASE_CONFIG;
                 
-                if (!firebaseConfig.apiKey) {
-                    throw new Error("Parsed Firebase config is invalid or missing apiKey.");
-                }
-
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
@@ -430,7 +422,7 @@
                 console.error("Firebase initialization error:", error);
                 loginScreen.innerHTML = `<div class="p-4 bg-red-900/50 border border-red-500 rounded-lg text-red-300">
                     <p class="font-bold">Could not connect to services.</p>
-                    <p class="text-sm mt-1">Please ensure your Netlify environment variables (APP_ID, FIREBASE_CONFIG) and Snippet Injection are set up correctly. Error: ${error.message}</p>
+                    <p class="text-sm mt-1">Please ensure your Netlify environment variables and Snippet Injection are set up correctly. Error: ${error.message}</p>
                 </div>`;
             }
         }
