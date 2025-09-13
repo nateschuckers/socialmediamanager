@@ -391,8 +391,18 @@
         }
 
         async function initFirebase() {
-            appId = typeof __app_id !== 'undefined' ? __app_id : 'social-sync-ai-app';
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+             // --- START DEBUGGING CODE ---
+            console.log("Attempting to initialize Firebase...");
+            console.log("Type of FIREBASE_CONFIG variable:", typeof FIREBASE_CONFIG);
+            if (typeof FIREBASE_CONFIG !== 'undefined') {
+                 console.log("Raw FIREBASE_CONFIG value:", FIREBASE_CONFIG);
+            } else {
+                console.error("CRITICAL: FIREBASE_CONFIG variable is undefined!");
+            }
+            // --- END DEBUGGING CODE ---
+            
+            appId = typeof APP_ID !== 'undefined' ? APP_ID : 'social-sync-ai-app';
+            const firebaseConfig = typeof FIREBASE_CONFIG !== 'undefined' ? JSON.parse(FIREBASE_CONFIG) : {};
             
             try {
                 app = initializeApp(firebaseConfig);
