@@ -173,7 +173,7 @@
                         <p class="text-sm text-gray-400">Post your best finished landscape photos. This builds your **portfolio** and nurtures your **existing community**. Use the app to generate a caption with a <strong>technical</strong> tone to attract other photographers, or a <strong>grow audience</strong> tone to gain new followers.</p>
                     </div>
                     <div>
-                        <p class="text-gray-200 font-semibold">Stories</p>
+                        <p class="text-sm text-gray-400">Stories</p>
                         <p class="text-sm text-gray-400">This is for **engagement** and **authenticity**. Share behind-the-scenes looks at a shoot or run polls to ask for feedback. This builds connection and keeps you top-of-mind.</p>
                     </div>
                 </div>
@@ -405,7 +405,49 @@
         const modalCaptionText = document.getElementById('modal-caption-text');
         const modalCopyBtn = document.getElementById('modal-copy-btn');
         const closeModalBtn = document.querySelector('.close-btn');
-
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const fileInputs = {
+            'longitude': document.getElementById('longitude-file-upload'),
+            'figure-and-form': document.getElementById('figure-and-form-file-upload')
+        };
+        const toneInputs = {
+            'longitude': document.getElementById('longitude-tone'),
+            'figure-and-form': document.getElementById('figure-and-form-tone')
+        };
+        const locationInputs = {
+            'longitude': document.getElementById('longitude-location'),
+            'figure-and-form': document.getElementById('figure-and-form-location')
+        };
+        const directionInputs = {
+            'longitude': document.getElementById('longitude-direction'),
+            'figure-and-form': document.getElementById('figure-and-form-direction')
+        };
+        const technicalSettings = {
+            'longitude': document.getElementById('longitude-technical-settings'),
+            'figure-and-form': document.getElementById('figure-and-form-technical-settings')
+        };
+        const isoInputs = {
+            'longitude': document.getElementById('longitude-iso'),
+            'figure-and-form': document.getElementById('figure-and-form-iso')
+        };
+        const apertureInputs = {
+            'longitude': document.getElementById('longitude-aperture'),
+            'figure-and-form': document.getElementById('figure-and-form-aperture')
+        };
+        const shutterSpeedInputs = {
+            'longitude': document.getElementById('longitude-shutter-speed'),
+            'figure-and-form': document.getElementById('figure-and-form-shutter-speed')
+        };
+        const generateButtons = {
+            'longitude': document.getElementById('longitude-generate-btn'),
+            'figure-and-form': document.getElementById('figure-and-form-generate-btn')
+        };
+        const postCreationAreas = {
+            'longitude': document.getElementById('longitude-post-creation-area'),
+            'figure-and-form': document.getElementById('figure-and-form-post-creation-area')
+        };
+        
         document.addEventListener('DOMContentLoaded', () => {
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
