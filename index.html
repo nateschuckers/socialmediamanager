@@ -355,7 +355,7 @@
         
         let uploadedImageBase64 = null;
         let currentBusiness = null;
-        let app, db, auth, userId, appId;
+        let app, db, auth, userId;
 
         const businessConfigs = {
             longitude: {
@@ -392,12 +392,10 @@
         async function initFirebase() {
             try {
                 console.log("Attempting to initialize Firebase...");
-
-                if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG === 'undefined' || !FIREBASE_CONFIG.apiKey) {
+                if (typeof FIREBASE_CONFIG === 'undefined' || !FIREBASE_CONFIG.apiKey) {
                     throw new Error("Firebase configuration variables were not injected by Netlify or are incomplete.");
                 }
 
-                appId = APP_ID;
                 const firebaseConfig = FIREBASE_CONFIG;
                 
                 app = initializeApp(firebaseConfig);
@@ -458,7 +456,7 @@
         voiceSelect.addEventListener('change', toggleCameraSettingsVisibility);
         saveStyleBtn.addEventListener('click', async () => {
             if (currentBusiness && userId) {
-                const styleRef = doc(db, 'artifacts', appId, 'users', userId, 'writingStyles', currentBusiness);
+                const styleRef = doc(db, "userStyles", userId, "brands", currentBusiness);
                 try {
                     await setDoc(styleRef, { style: writingSampleInput.value, lastUpdated: serverTimestamp() });
                     styleSavedMessage.textContent = 'Style Saved!';
@@ -467,14 +465,14 @@
                 } catch (error) {
                     console.error("Error saving style:", error);
                     styleSavedMessage.textContent = 'Error saving.';
-                    styleSavedMessage.classList.remove('hidden').add('text-red-400');
-                    setTimeout(() => styleSavedMessage.classList.add('hidden').remove('text-red-400'), 2000);
+                    styleSavedMessage.classList.add('hidden', 'text-red-400');
+                    setTimeout(() => styleSavedMessage.classList.add('hidden', 'text-red-400'), 2000);
                 }
             }
         });
         clearStyleBtn.addEventListener('click', async () => {
             if (currentBusiness && userId) {
-                const styleRef = doc(db, 'artifacts', appId, 'users', userId, 'writingStyles', currentBusiness);
+                const styleRef = doc(db, "userStyles", userId, "brands", currentBusiness);
                 try {
                     await deleteDoc(styleRef);
                     writingSampleInput.value = '';
@@ -513,7 +511,7 @@
             
             writingSampleInput.value = 'Loading style...';
             try {
-                const styleRef = doc(db, 'artifacts', appId, 'users', userId, 'writingStyles', currentBusiness);
+                const styleRef = doc(db, "userStyles", userId, "brands", currentBusiness);
                 const docSnap = await getDoc(styleRef);
                 if (docSnap.exists()) {
                     writingSampleInput.value = docSnap.data().style || '';
@@ -612,9 +610,13 @@
                     generationConfig: { responseMimeType: "application/json" }
                 };
 
-                const apiKey = "";
+                const apiKey = typeof GEMINI_API_KEY !== 'undefined' ? GEMINI_API_KEY : "";
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
                 
+                if (!apiKey) {
+                    throw new Error("Gemini API key is not configured. Please add it to your Netlify environment variables.");
+                }
+
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
