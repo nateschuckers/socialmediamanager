@@ -391,13 +391,17 @@
 
         async function initFirebase() {
             try {
-                if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG === 'undefined' || !FIREBASE_CONFIG.apiKey) {
-                    throw new Error("Firebase configuration variables are not defined or are incomplete.");
+                if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG_STRING === 'undefined') {
+                    throw new Error("Firebase configuration variables were not injected by Netlify.");
                 }
 
                 appId = APP_ID;
-                const firebaseConfig = FIREBASE_CONFIG;
+                const firebaseConfig = JSON.parse(FIREBASE_CONFIG_STRING);
                 
+                if (!firebaseConfig.apiKey) {
+                    throw new Error("Parsed Firebase config is invalid or missing apiKey.");
+                }
+
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
