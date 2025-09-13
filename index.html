@@ -391,11 +391,21 @@
 
         async function initFirebase() {
             try {
-                if (typeof window.FIREBASE_CONFIG === 'undefined' || !window.FIREBASE_CONFIG.apiKey) {
-                    throw new Error("Firebase configuration variables were not injected by Netlify or are incomplete.");
+                const requiredKeys = ['FIREBASE_API_KEY', 'FIREBASE_AUTH_DOMAIN', 'FIREBASE_PROJECT_ID', 'FIREBASE_STORAGE_BUCKET', 'FIREBASE_MESSAGING_SENDER_ID', 'FIREBASE_APP_ID'];
+                const missingKeys = requiredKeys.filter(key => typeof window[key] === 'undefined' || window[key] === '');
+
+                if (missingKeys.length > 0) {
+                    throw new Error(`The following configuration variables were not injected by Netlify: ${missingKeys.join(', ')}`);
                 }
 
-                const firebaseConfig = window.FIREBASE_CONFIG;
+                const firebaseConfig = {
+                    apiKey: window.FIREBASE_API_KEY,
+                    authDomain: window.FIREBASE_AUTH_DOMAIN,
+                    projectId: window.FIREBASE_PROJECT_ID,
+                    storageBucket: window.FIREBASE_STORAGE_BUCKET,
+                    messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
+                    appId: window.FIREBASE_APP_ID
+                };
                 
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
