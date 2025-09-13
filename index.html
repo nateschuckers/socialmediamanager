@@ -391,6 +391,12 @@
 
         async function initFirebase() {
             try {
+                // Debugging logs
+                console.log("Attempting to initialize Firebase...");
+                console.log("Type of FIREBASE_CONFIG_STRING:", typeof FIREBASE_CONFIG_STRING);
+                console.log("Raw FIREBASE_CONFIG_STRING value:", FIREBASE_CONFIG_STRING);
+
+
                 if (typeof APP_ID === 'undefined' || typeof FIREBASE_CONFIG_STRING === 'undefined' || FIREBASE_CONFIG_STRING.trim() === '') {
                     throw new Error("Firebase configuration variables were not injected by Netlify or are empty.");
                 }
